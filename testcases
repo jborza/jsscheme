@@ -1,0 +1,127 @@
+#Testing the Scheme interpreter
+#the structure is a list of commands (delimited by line break)
+#if a line starts with ->, it denotes the expected output
+#multiple successive line breaks start a new session
+
+# atoms
+1
+-> 1
+
+#t
+-> #t
+
+#f 
+-> #f
+
+"hello"
+-> "hello"
+
+#simple arithmetics
+(+ 1 2)
+-> 3
+
+(- 4 4)
+-> 0
+
+(- 5 8)
+-> -3
+
+(- 0 -3)
+-> 3
+
+(* 3 4)
+-> 12
+
+#comparison operators
+(> 4 3)
+-> #t
+
+(< 4 3)
+-> #f
+
+(= 4 3)
+-> #f
+
+(= 4 4)
+-> #t
+
+(< 3 4)
+-> #t
+
+(> 3 4)
+-> #f
+
+#conditionals
+(if #t #t #f)
+-> #t
+
+(if #f #t #f)
+-> #f
+
+#nested conditionals
+(if #t (if (> 1 0) 1 0) #f)
+-> 1
+
+(if #f (if (> 1 0) 1 0) (if (< 1 0) 3 4))
+-> 4
+
+#and special form
+#and returns #f if one of the arguments is #f and the rest of arguments are not evaluated.
+#if all arguments are not #f, it returns the value of the last argument. 
+(and #f 0)
+-> #f
+(and 0 #f)
+-> #f
+(and 1 2)
+-> 2
+(and 1 2 "poo")
+-> "poo"
+
+#or special form
+#It returns the value of the first argument which is not #f and the rest of arguments are not evaluated. It returns the value of the last argument if it is evaluated. 
+(or #f 0)
+-> 0
+
+(or #f 0 1)
+-> 0
+
+(or 1 2 3)
+-> 1
+
+(or #f #f #f)
+-> #f
+
+#define values
+(define three 3)
+three
+-> 3
+
+#define to a define
+(define ten 10)
+(define also_ten ten)
+also_ten
+-> 10
+
+#define functions
+(define (1+ n) (+ 1 n))
+(1+ 4)
+-> 5
+
+(define (abs x) (if (> 0 x) x (* x -1))
+(abs 4)
+-> 4
+(abs -4)
+-> 4
+
+#lambda form
+((lambda () 1))
+-> 1
+
+ ( (lambda (n) (* n n)) 4)
+ -> 16
+
+(define square (lambda (n) (* n n)))
+(square 4)
+-> 16
+(square (square 4))
+-> 256
