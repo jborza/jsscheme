@@ -7,10 +7,13 @@
 1
 -> 1
 
-#t
+-3
+-> -3
+
+ #t
 -> #t
 
-#f 
+ #f 
 -> #f
 
 "hello"
@@ -65,15 +68,25 @@
 (if #f (if (> 1 0) 1 0) (if (< 1 0) 3 4))
 -> 4
 
+#cond conditionals
+(cond ((< 3 4) 1))
+-> 1
+
+(cond ((< 3 2) 1) (> 3 2) 2))
+-> 2
+
 #and special form
 #and returns #f if one of the arguments is #f and the rest of arguments are not evaluated.
 #if all arguments are not #f, it returns the value of the last argument. 
 (and #f 0)
 -> #f
+
 (and 0 #f)
 -> #f
+
 (and 1 2)
 -> 2
+
 (and 1 2 "poo")
 -> "poo"
 
@@ -102,7 +115,24 @@ three
 also_ten
 -> 10
 
+#define expression
+(define five (+ 2 3))
+five
+-> 5
+
+#define nested expressions
+(define five (+ 2 (-6 3)))
+five
+-> 5
+(define ten (+ five 5))
+ten
+-> 10
+
 #define functions
+(define (twentyfive) (* 5 5))
+(twentyfive)
+-> 25
+
 (define (1+ n) (+ 1 n))
 (1+ 4)
 -> 5
@@ -120,8 +150,35 @@ also_ten
  ( (lambda (n) (* n n)) 4)
  -> 16
 
+#define with lambda
 (define square (lambda (n) (* n n)))
 (square 4)
 -> 16
+(square (+ 1 4))
+-> 25
 (square (square 4))
 -> 256
+
+#define function inside function
+(define (multiply-by-ten x)
+    (define (multiply-by-five x) (* x 5))
+    (+ (multiply-by-five x) (multiply-by-five x)))
+(multiply-by-ten 9)
+-> 90
+
+#capturing outer parameter to the inner function
+(define (f x)  (define (inner) (* x x))  (inner))
+(f 3)
+-> 9
+
+#the same function without capture
+(define (g x)  (define (inner x) (* x x))  (inner x))
+(g 3)
+-> 9
+
+#not requiring forward declaration
+(define (sum-of-squares x y) 
+  (+ (square x) (square y)))
+(define (square x) (* x x))
+(sum-of-squares 4 5)
+-> 41
