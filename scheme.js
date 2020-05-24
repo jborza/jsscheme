@@ -1,9 +1,10 @@
 function createInitialState() {
     return {
         dictionary: [],
+        input: undefined, //line being parsed
 
         initializeBuiltinForms: function(){
-
+            //TODO special forms
         },
         
         defineWord: function(word, body){
@@ -11,8 +12,42 @@ function createInitialState() {
         },
 
         evaluateLine: function(line){
-            
-        }
+            while (this.input !== undefined) {
+                let nextToken = this.getNextInputWord();
+                if (nextToken === undefined) {
+                    break;
+                }
+                if (!this.evaluateToken(nextToken)) {
+                    return;
+                }
+            }
+        },
+
+        evaluateToken: function(token){
+            print('consumed token: '+token);
+        },
+
+        getNextInputWord: function () {
+            return this.getNextDelimitedWord(' ');
+        },
+
+        getNextDelimitedWord: function (delimiter) {
+            //trim leading spaces
+            if (this.input === undefined) {
+                return '';
+            }
+            this.input = this.input.trimStart();
+            let index = this.input.indexOf(delimiter);
+            if (index == -1) {
+                index = this.input.length;
+            }
+            let word = this.input.substring(0, index);
+            if (this.input.length > index + 1)
+                this.input = this.input.substring(index + 1);
+            else
+                this.input = undefined;
+            return word;
+        },
     }
 }
 
@@ -43,7 +78,7 @@ function repl() {
         noprompt = true;
     }
     if (noprompt === false) {
-        console.log('? ')
+        print('> ')
     }
 
     stdin.addListener("data", function (line) {
