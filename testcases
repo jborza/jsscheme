@@ -10,6 +10,7 @@
 -3
 -> -3
 
+#next two expressions are indented as my test parser uses # for comments
  #t
 -> #t
 
@@ -159,6 +160,21 @@ ten
 (square (square 4))
 -> 256
 
+#define inside function
+(define (a) (define b 3) b)
+(a)
+-> 3
+
+#define function inside function
+(define (a) (define (b) 3) (b))
+(a)
+-> 3
+
+#more deeply nested
+(define (a) (define (b) (define (c) 99) (c)) (b))
+(a)
+-> 99
+
 #define function inside function
 (define (multiply-by-ten x)
     (define (multiply-by-five x) (* x 5))
@@ -176,9 +192,70 @@ ten
 (g 3)
 -> 9
 
+#capturing with let
+(define add4
+  (let ((x 4))
+    (lambda (y) (+ x y))))
+(add4 6) 
+-> 10
+
 #not requiring forward declaration
 (define (sum-of-squares x y) 
   (+ (square x) (square y)))
 (define (square x) (* x x))
 (sum-of-squares 4 5)
 -> 41
+
+#quoting
+
+(quote 1)
+-> 1
+
+'1
+-> 1
+
+'"a"
+-> a
+
+'()
+-> ()
+
+'(1 2)
+-> (1 2)
+
+'(1 2 3)
+-> (1 2 3)
+
+'(1 "two" 3)
+-> (1 "two" 3)
+
+(quote (+ 1 2)) 
+-> (+ 1 2)
+
+'(define foo 3)
+-> (define foo 3)
+
+(define foo '(1 2 3))
+foo
+-> '(1 2 3)
+
+(define (foo) '(1 2 3))
+(foo)
+-> '(1 2 3)
+
+# set
+(define x 4)
+x
+-> 4
+(set! x 5)
+x
+-> 5
+
+#let 
+(let ((x 2)) x)
+x
+-> 2
+
+(let ((x 2) (y 3))
+  (*x y))  
+-> 6
