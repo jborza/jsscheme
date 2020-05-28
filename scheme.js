@@ -12,6 +12,7 @@ function createInitialState() {
         },
 
         evaluateLine: function(line){
+            this.input = line;
             while (this.input !== undefined) {
                 let nextToken = this.getNextInputWord();
                 if (nextToken === undefined) {
@@ -25,6 +26,7 @@ function createInitialState() {
 
         evaluateToken: function(token){
             print('consumed token: '+token);
+            return true;
         },
 
         getNextInputWord: function () {
@@ -83,7 +85,7 @@ function repl() {
 
     stdin.addListener("data", function (line) {
         let trimmedLine = line.toString().trim();
-        state.evaluateLine(trimmedLine, !noprompt);
+        state.evaluateLine(trimmedLine);
     });
 }
 
